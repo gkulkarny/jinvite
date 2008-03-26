@@ -1,8 +1,0 @@
-TODO
-
-==Stuff to do as of 3-25-08==
-
-  * write detailed usage documentation
-  * write database table schemas
-  * write integration howto
-  * lay down some code
