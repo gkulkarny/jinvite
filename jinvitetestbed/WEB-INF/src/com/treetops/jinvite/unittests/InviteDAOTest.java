@@ -16,9 +16,9 @@ public class InviteDAOTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		String DB_USER = "jsfu";
-		String DB_PASS = "12jsfu0r";
-		String DB_URL = "jdbc:mysql://localhost/jsfu";
+		final String DB_USER = "jsfu";
+		final String DB_PASS = "12jsfu0r";
+		final String DB_URL = "jdbc:mysql://localhost/jsfu";
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
