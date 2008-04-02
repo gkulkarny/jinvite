@@ -8,6 +8,7 @@ package com.treetops.jinvite.pojo;
 public class Invite {
 
 	private String user;
+	private String invitedGuest;
 	private String inviteCode;
 	private boolean confirmed;
 	public String getUser() {
@@ -27,6 +28,12 @@ public class Invite {
 	}
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
+	}
+	public String getInvitedGuest() {
+		return invitedGuest;
+	}
+	public void setInvitedGuest(String invitedGues) {
+		this.invitedGuest = invitedGues;
 	}
 	
 	

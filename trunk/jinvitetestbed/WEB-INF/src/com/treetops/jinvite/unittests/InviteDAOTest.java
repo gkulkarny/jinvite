@@ -18,7 +18,7 @@ public class InviteDAOTest extends TestCase {
 		
 		final String DB_USER = "jsfu";
 		final String DB_PASS = "12jsfu0r";
-		final String DB_URL = "jdbc:mysql://localhost/jsfu";
+		final String DB_URL = "jdbc:mysql://localhost/jsfutest";
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -84,19 +84,5 @@ public class InviteDAOTest extends TestCase {
 		
 	}
 
-	public void testConfirmInvite() {
-		InviteDAO inviteDAO = new InviteDAO(conn);
-		inviteDAO.confirmInvite("testuser");
-		try {
-			String sql = "select confirmed from invite where user='testuser'";
-			ResultSet rs = conn.createStatement().executeQuery(sql);
-			if ( rs.next() ) {
-				assertEquals(true,rs.getBoolean("confirmed"));
-			} else {
-				fail("wtf");
-			}
-			rs.close();
-		} catch (Exception e) { fail(e.toString()); }
-	}
 
 }

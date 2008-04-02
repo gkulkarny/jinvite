@@ -13,6 +13,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 
+import com.treetops.jinvite.dao.InviteDAO;
+import com.treetops.jinvite.pojo.Invite;
 import com.treetops.jinvite.pojo.InviteMessage;
 
 public class Inviter {
@@ -37,7 +39,7 @@ public class Inviter {
 		this.smtpPort = port;
 	}
 	
-	public void invite(InviteMessage msg) throws MessagingException,InviteMessageException {
+	public void invite(InviteMessage msg, String user) throws MessagingException,InviteMessageException {
     	p.put("mail.host",smtpHost);
     	p.put("mail.smtp.auth", "true");
     	p.put("mail.smtp.port", Integer.toString(smtpPort));
@@ -49,6 +51,33 @@ public class Inviter {
         message.setText(msg.getMsgBody());
         
         Transport.send(message);
+        
+        Invite invite = new Invite();
+        invite.setUser(user);
+        invite.setInvitedGuest(msg.getTo());
+        invite.setInviteCode(msg.getInviteCode());
+        invite.setConfirmed(false);
+        try {
+        	Connection conn = ConnectionFactory.getConnection();
+        	InviteDAO inviteDAO = new InviteDAO(conn);
+        	inviteDAO.saveInvite(invite);
+        	conn.close();
+        } catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	public String confirm(String code) {
+		String user = null;
+        try {
+        	Connection conn = ConnectionFactory.getConnection();
+        	InviteDAO inviteDAO = new InviteDAO(conn);
+        	Invite invite = inviteDAO.getInviteByCode(code);
+        	if ( invite != null ) {
+        		inviteDAO.confirmInvite(invite);
+        		user = invite.getUser();
+        	}
+        	conn.close();
+        } catch (Exception e) { e.printStackTrace(); }
+        return user;
 	}
     class PopupAuthenticator extends Authenticator {
         public PasswordAuthentication getPasswordAuthentication() {
