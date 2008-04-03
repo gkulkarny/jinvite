@@ -29,67 +29,41 @@ public class InviteDAO {
 	 * @param inviteCode
 	 * @return
 	 */
-	public Invite getInviteByCode(String inviteCode) {
+	public Invite getByCode(String inviteCode) {
 		Invite invite = null;
 		try {
-			String sql = "select user,invitedGuest,inviteCode,confirmed from invite where inviteCode=?";
+			String sql = "select * from invite where code=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1,inviteCode);
 			ResultSet rs = pStmt.executeQuery();
 			if ( rs.next() ) {
 				invite = new Invite();
 				invite.setUser(rs.getString("user"));
-				invite.setInviteCode(inviteCode);
-				invite.setConfirmed(rs.getBoolean("confirmed"));
-				invite.setInvitedGuest(rs.getString("invitedGuest"));
+				invite.setCode(inviteCode);
+				invite.setCreatedOn(rs.getString("createdOn"));
 			}
 			rs.close();
 			pStmt.close();
-		} catch(Exception e) { /* *shrug*, who cares */ }
+		} catch(Exception e) { e.printStackTrace(); }
 		return invite;
 	}
 
 	/**
-	 * Returns the user's Invite object if the user exists, null otherwise
-	 * @param user
-	 * @return invite
+	 * Returns true if the given invite code exists false otherwise
+	 * @param code
+	 * @return true if the code exists, false otherwise
 	 */
-	public Invite getInvite(String invitedGuest) {
-		Invite invite = null;
-		try {
-			String sql = "select user,invitedGuest,inviteCode,confirmed from invite where invitedGuest=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1,invitedGuest);
-			ResultSet rs = pStmt.executeQuery();
-			if ( rs.next() ) {
-				invite = new Invite();
-				invite.setUser(rs.getString("user"));
-				invite.setInviteCode(rs.getString("inviteCode"));
-				invite.setConfirmed(rs.getBoolean("confirmed"));
-				invite.setInvitedGuest(invitedGuest);
-			}
-			rs.close();
-			pStmt.close();
-		} catch(Exception e) { /* *shrug*, who cares */ }
-		return invite;
-	}
-
-	/**
-	 * Returns true if the primary key for the given invite exists false otherwise
-	 * @param invite
-	 * @return true if the invite exists, false otherwise
-	 */
-	public boolean exists(Invite invite) {
+	public boolean codeExists(String code) {
 		boolean exists = false;
 		try {
-			String sql = "select invitedGuest from invite where invitedGuest=?";
+			String sql = "select code from invite where code=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
-			pStmt.setString(1,invite.getInvitedGuest());
+			pStmt.setString(1,code);
 			ResultSet rs = pStmt.executeQuery();
 			if ( rs.next() ) { exists = true; }
 			rs.close();
 			pStmt.close();
-		} catch (Exception e) {}
+		} catch (Exception e) { e.printStackTrace(); }
 		return exists;
 	}
 	
@@ -97,37 +71,30 @@ public class InviteDAO {
 	 * Saves the existing invite if it does not already exist
 	 * @param invite
 	 */
-	public void saveInvite(Invite invite) {
-	
-		if ( !exists(invite)) {
-			try {
-				String sql = "insert into invite(user,invitedGuest, inviteCode,confirmed) values (?,?,?,?)";
-				PreparedStatement pStmt = conn.prepareStatement(sql);
-				pStmt.setString(1,invite.getUser());
-				pStmt.setString(2,invite.getInvitedGuest());
-				pStmt.setString(3,invite.getInviteCode());
-				pStmt.setBoolean(4,invite.isConfirmed());
-				pStmt.executeUpdate();
-				pStmt.close();
-			} catch (Exception e) {}
-		}
+	public void save(Invite invite) {
+		try {
+			String sql = "insert into invite(user,code,createdOn) values (?,?,now())";
+			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt.setString(1,invite.getUser());
+			pStmt.setString(2,invite.getCode());
+			pStmt.executeUpdate();
+			pStmt.close();
+		} catch (Exception e) { e.printStackTrace(); }
 	}
-	
+
 	/**
-	 * Updates the column confirmed to true for the given invitedGuest if they exist
-	 * @param user 
+	 * Deletes the given invite
+	 * @param invite
 	 */
-	public void confirmInvite(Invite invite) {
-		if ( exists(invite) ) {
-			try {
-				String sql = "update invite set confirmed=true where invitedGuest=? and inviteCode=? ";
-				PreparedStatement pStmt = conn.prepareStatement(sql);
-				pStmt.setString(1,invite.getInvitedGuest());
-				pStmt.setString(2,invite.getInviteCode());
-				pStmt.executeUpdate();
-				pStmt.close();
-			} catch (Exception e) {}
-		}
+	public void deleteCode(String code) {
+		try {
+			String sql = "delete from invite where code=?";
+			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt.setString(1,code);
+			pStmt.executeUpdate();
+			pStmt.close();
+		} catch (Exception e) { e.printStackTrace(); }
 	}
+
 
 }
