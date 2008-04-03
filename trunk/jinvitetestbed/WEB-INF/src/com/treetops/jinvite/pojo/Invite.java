@@ -1,5 +1,7 @@
 package com.treetops.jinvite.pojo;
 
+import java.util.UUID;
+
 /**
  * Represents a single invitation.
  * @author chad
@@ -7,34 +9,29 @@ package com.treetops.jinvite.pojo;
  */
 public class Invite {
 
-	private String user;
-	private String invitedGuest;
-	private String inviteCode;
-	private boolean confirmed;
+	private String user = null;
+	private String code = null;
+	private String createdOn = null;
+
 	public String getUser() {
 		return user;
 	}
 	public void setUser(String user) {
 		this.user = user;
 	}
-	public String getInviteCode() {
-		return inviteCode;
+	public String getCode() {
+		return code;
 	}
-	public void setInviteCode(String inviteCode) {
-		this.inviteCode = inviteCode;
+	public void setCode(String code) {
+		this.code = code;
 	}
-	public boolean isConfirmed() {
-		return confirmed;
+	public String getCreatedOn() {
+		return createdOn;
 	}
-	public void setConfirmed(boolean confirmed) {
-		this.confirmed = confirmed;
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
 	}
-	public String getInvitedGuest() {
-		return invitedGuest;
-	}
-	public void setInvitedGuest(String invitedGues) {
-		this.invitedGuest = invitedGues;
-	}
+	
 	
 	
 }
