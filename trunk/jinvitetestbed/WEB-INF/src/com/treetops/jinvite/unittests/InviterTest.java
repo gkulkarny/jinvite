@@ -64,8 +64,7 @@ public class InviterTest extends TestCase {
 
 	public void testGetInviteCode() {
 		
-		Inviter inviter = new Inviter("user1", conn);
-		String code = inviter.getInviteCode();
+		String code = Inviter.getInviteCode(conn,"user1");
 		assertEquals(code.length(), 36);
 	
 		try {
@@ -81,22 +80,20 @@ public class InviterTest extends TestCase {
 		
 		try {
 			
-			Inviter inviter = new Inviter("user1", conn);
 			String sql = "insert into invite(code, user, createdOn) values ('somecode','someuser',now())";
 			conn.createStatement().executeUpdate(sql);
 			
-			boolean confirmed = inviter.confirm("somecode");
+			boolean confirmed = Inviter.confirm(conn,"somecode");
 			assertTrue(confirmed);
 			
 			ResultSet rs = conn.createStatement().executeQuery("select * from invite where code='somecode'");
 			assertFalse(rs.next());
 			rs.close();
 
-			inviter = new Inviter("user1", conn);
 			sql = "insert into invite(code, user, createdOn) values ('asdfsomecode','someuser',now())";
 			conn.createStatement().executeUpdate(sql);
 			
-			confirmed = inviter.confirm("somecode");
+			confirmed = Inviter.confirm(conn,"somecode");
 			assertFalse(confirmed);
 
 			rs = conn.createStatement().executeQuery("select * from invite where code='asdfsomecode'");
