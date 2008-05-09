@@ -86,14 +86,16 @@ public class InviteDAO {
 	 * Deletes the given invite
 	 * @param invite
 	 */
-	public void deleteCode(String code) {
+	public int deleteCode(String code) {
+		int deleted = 0;
 		try {
 			String sql = "delete from invite where code=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1,code);
-			pStmt.executeUpdate();
+			deleted = pStmt.executeUpdate();
 			pStmt.close();
 		} catch (Exception e) { e.printStackTrace(); }
+		return deleted;
 	}
 
 
