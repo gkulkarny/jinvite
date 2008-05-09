@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 
-import com.treetops.jinvite.Inviter;
 import com.treetops.jinvite.dao.InviteDAO;
 import com.treetops.jinvite.pojo.Invite;
 

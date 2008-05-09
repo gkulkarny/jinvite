@@ -1,7 +1,5 @@
 package com.treetops.jinvite.pojo;
 
-import java.util.UUID;
-
 /**
  * Represents a single invitation.
  * @author chad
